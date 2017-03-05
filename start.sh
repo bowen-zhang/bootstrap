@@ -7,7 +7,7 @@ if [ $EUID != 0 ]; then
 fi
 
 # Install VIM
-sudo apt-get install vim
+sudo apt-get -y install vim
 
 # Set python library path
 if grep -xqe "PYTHONPATH=.*" $HOME/.profile ; then
