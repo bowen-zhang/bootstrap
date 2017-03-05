@@ -10,10 +10,10 @@ fi
 sudo apt-get -y install vim
 
 # Set python library path
-if grep -xqe "PYTHONPATH=.*" $HOME/.profile ; then
-  sed -i '/^PYTHONPATH=.*$/d' $HOME/.profile
+if grep -xqe "export PYTHONPATH=.*" $HOME/.profile ; then
+  sed -i '/^export PYTHONPATH=.*$/d' $HOME/.profile
 fi
-echo "PYTHONPATH=$HOME/src" >> $HOME/.profile
+echo "export PYTHONPATH=$HOME/src" >> $HOME/.profile
 
 
 # Optimize boot performance
@@ -26,6 +26,10 @@ if [ -e ./mnt/autoboot.txt ]; then
   fi
 fi
 echo "boot_partition=6" | sudo tee -a ./mnt/autoboot.txt > /dev/null
-
 sudo umount ./mnt
 rmdir ./mnt
+
+sudo service hciuart stop
+sudo service dhcpcd stop
+sudo service alsa-restore stop
+ 
