@@ -1,5 +1,8 @@
 #!/bin/bash
 
+USERDIR=/home/pi
+SRCDIR=$USERDIR/src
+
 # Elevate privileges
 if [ $EUID != 0 ]; then
     sudo "$0" "$@"
@@ -9,15 +12,17 @@ fi
 # Install VIM
 sudo apt-get -y install vim
 
-# Set python library path
-if grep -xqe "export PYTHONPATH=.*" $HOME/.profile ; then
-  sed -i '/^export PYTHONPATH=.*$/d' $HOME/.profile
+###############################
+echo Setting python library path...
+if grep -xqe "export PYTHONPATH=.*" $USERDIR/.profile ; then
+  sed -i '/^export PYTHONPATH=.*$/d' $USERDIR/.profile
 fi
-echo "export PYTHONPATH=$HOME/src" >> $HOME/.profile
+echo "export PYTHONPATH=$SRCDIR" >> $USERDIR/.profile
 
 
-# Optimize boot performance
-cd $HOME
+###############################
+echo Optimizing boot performance...
+cd $USERDIR
 mkdir ./mnt
 sudo mount /dev/mmcblk0p1 ./mnt
 if [ -e ./mnt/autoboot.txt ]; then
@@ -32,4 +37,6 @@ rmdir ./mnt
 sudo service hciuart stop
 sudo service dhcpcd stop
 sudo service alsa-restore stop
+
+echo DONE!
  
