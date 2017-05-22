@@ -9,6 +9,9 @@ if [ $EUID != 0 ]; then
     exit $?
 fi
 
+sudo apt-get update
+sudo apt-get install python-dev
+
 # Install VIM
 sudo apt-get -y install vim
 
@@ -39,4 +42,4 @@ sudo service dhcpcd stop
 sudo service alsa-restore stop
 
 echo DONE!
- 
+
