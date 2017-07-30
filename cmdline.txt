@@ -1,0 +1,1 @@
+dwc_otg.lpm_enable=0 root=/dev/mmcblk0p2 rootfstype=ext4 rootflags=commit=120,data=writeback noatime nodiratime data=writeback quiet elevator=deadline rootwait

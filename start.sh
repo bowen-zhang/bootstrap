@@ -37,9 +37,24 @@ echo "boot_partition=6" | sudo tee -a ./mnt/autoboot.txt > /dev/null
 sudo umount ./mnt
 rmdir ./mnt
 
-sudo service hciuart stop
-sudo service dhcpcd stop
-sudo service alsa-restore stop
+###########
+echo Removing dphys-swapfile
+sudo apt-get purge -y dphys-swapfile
+
+###########
+echo Disabling unnecessary services
+sudo systemctl disable hciuart
+sudo systemctl disable dnsmasq
+sudo systemctl disable hostapd
+sudo systemctl disable triggerhappy
+sudo systemctl disable fake-hwclock
+sudo systemctl disable plymouth-start
+sudo systemctl disable avahi-daemon
+sudo systemctl disable kbd
+
+###########
+echo Tuning kernel...
+sudo cp cmdline.txt /boot/cmdline.txt
 
 echo DONE!
 
