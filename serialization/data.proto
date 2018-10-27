@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message Product {
+	enum Category {
+		UNKNOWN = 0;
+		CATEGORY_A = 1;
+		CATEGORY_B = 2;
+		CATEGORY_C = 3;
+	}
+
+	int32 id = 1;
+	string name = 2;
+	Category category = 3;
+	repeated Review reviews = 4;
+}
+
+message Review {
+	string title = 1;
+	string comment = 2;
+}

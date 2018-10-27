@@ -1,0 +1,11 @@
+id: 1
+name: 'Test Product'
+category: CATEGORY_B
+reviews: {
+	title: 'Great product'
+	comment: 'I really like this product.'
+}
+reviews: {
+	title: 'Works as expected'
+	comment: 'it works like a charm.'
+}
