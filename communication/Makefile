@@ -6,8 +6,11 @@ init:
 proto:
 	python -m grpc_tools.protoc -I=. --python_out=. --grpc_python_out=. ./calculator.proto
 
-run_server:
+run-server:
 	PYTHONPATH=$(ROOT_DIR) python server/main.py
 
-run_client:
+run-client:
 	PYTHONPATH=$(ROOT_DIR) python client/main.py
+
+run-web-client:
+	cd web-client && make run

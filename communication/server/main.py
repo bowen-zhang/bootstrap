@@ -8,6 +8,7 @@ from concurrent import futures
 
 class Calculator(calculator_pb2_grpc.CalculatorServicer):
   def Sum(self, request, context):
+    print 'Processing request from {0}...'.format(request.client_name)
     response = calculator_pb2.Response()
     response.message = '{0} has sum value of {1}.'.format(
         request.client_name, sum(request.values))
