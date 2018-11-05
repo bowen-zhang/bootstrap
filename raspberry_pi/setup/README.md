@@ -4,15 +4,23 @@ Setting up a Raspberry Pi headless (without monitor and keyboard).
 
 # How
 
-## Before Start
+## Items Needed
 
-Make sure you have:
+For Raspberry Pi:
 
-* Raspberry Pi (or Raspberry Pi Zero W)
+* Raspberry Pi
 * Micro SD card
 * Micro SD card USB reader
-* Laptop (Mac, Windows or Linux)
-* USB (male to male) cable or [USB to TTL cable](https://www.google.com/search?q=usb+PL2303HX)
+* Computer (Mac)
+* Ethernet cable (and USB ethernet adapter if needed by laptop)
+
+For Raspberry Pi Zero W:
+
+* Raspberry Pi Zero W
+* Micro SD card
+* Micro SD card USB reader
+* Computer (Mac)
+* Micro USB to USB cable
 
 ## Flash Image
 
@@ -43,12 +51,6 @@ Make sure you have:
     touch /Volumes/boot/ssh
     ```
 
-    For Windows:
-    ```shell
-    cd [SD card drive]:
-    type NULL >> ssh
-    ```
-
 1. Enable Serial Console
 
     If you want to use USB to TTL cable to connect to Raspberry Pi, add the
@@ -77,17 +79,19 @@ Make sure you have:
 
 1. Put micro SD card into Raspberry Pi.
 
+1. Power up by connecting USB to micro USB cable.
+
+## Connect via Serial Console
+
+1. Get a [USB to TTL cable](https://www.google.com/search?q=usb+PL2303HX)
+
 1. Connect USB to TTL cable
 
     1. Red wire: DO NOT connect.
     1. Black wire to PIN 6.
     1. White wire to PIN 8.
     1. Green wire to PIN 10.
-    1. USB to laptop.
-
-1. Power up by connecting USB to micro USB cable.
-
-## Connect via Serial Console
+    1. USB to computer.
 
 1. Install driver (for Mac).
 
@@ -114,7 +118,15 @@ Make sure you have:
     * username: pi
     * password: raspberry
 
-## Connect via SSH
+## Connect via Ethernet Cable
+
+1. Connect ethernet cable to Raspberry Pi and computer.
+
+1. Power up Raspberry Pi.
+
+1. Turn off WiFi on computer.
+
+1. SSH to Raspberry Pi using mDNS.
 
     Before connecting to a new Raspberry Pi for the first time:
     ```shell
@@ -125,7 +137,39 @@ Make sure you have:
     ```shell
     ssh pi@raspberrypi.local
     ```
+    And use password "raspberry".
 
+## Connect via WiFi
+
+1. Change hostname (if multiple Raspberry Pi are in the same WiFi network)
+
+    1. Connect to Raspberry Pi via serial console or ethernet cable.
+
+    1. Launch Raspberry Pi configuration tool.
+
+    ```shell
+    sudo raspi-config
+    ```
+
+    1. Go to "Network", "Hostname", enter new hostname and exit.
+
+    1. Reboot.
+
+    ```shell
+    sudo reboot
+    ```
+
+1. SSH to Raspberry Pi
+
+    Before connecting to a new Raspberry Pi for the first time:
+    ```shell
+    ssh-keygen -R [hostname].local
+    ```
+
+    Then, each time:
+    ```shell
+    ssh pi@[hostname].local
+    ```
     And use password "raspberry".
 
 ## Mount File System
@@ -136,7 +180,7 @@ Make sure you have:
 
     ```shell
     mkdir ~/[mount point]
-    sshfs pi@raspberrypi.local:/home/pi ~/[mount point]
+    sshfs pi@[hostname].local:/home/pi ~/[mount point]
     ```
 
 ## Resources
