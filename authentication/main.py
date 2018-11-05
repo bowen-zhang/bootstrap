@@ -13,34 +13,35 @@
 # limitations under the License.
 
 import flask
-import flask_oauth
 import functools
+import json
 
-#GOOGLE_CLIENT_ID = '[client id]'
-#GOOGLE_CLIENT_SECRET = '[secret]'
-GOOGLE_CLIENT_ID = '466493781521-u3duaojirc4ifiind9lq7p3h8c91vb51.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = '3jD2fPtLy0VEgX0EYCrg57Dx'
+from flask_oauthlib import client
 
 REDIRECT_URI = '/oauth2callback'
+
+with open('authorized_users.txt') as f:
+  authorized_users = f.readlines()
+with open('client_secret.json') as f:
+  config = json.loads(f.read())
 
 app = flask.Flask(__name__)
 app.secret_key = "__somthing__"
 
-oauth = flask_oauth.OAuth()
+oauth = client.OAuth(app)
 google = oauth.remote_app(
     'google',
-    base_url='https://www.google.com/accounts/',
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    request_token_url=None,
+    consumer_key=config['web']['client_id'],
+    consumer_secret=config['web']['client_secret'],
     request_token_params={
-        'scope': 'https://www.googleapis.com/auth/userinfo.email',
-        'response_type': 'code'
+        'scope': 'email',
     },
-    access_token_url='https://accounts.google.com/o/oauth2/token',
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
     access_token_method='POST',
-    access_token_params={'grant_type': 'authorization_code'},
-    consumer_key=GOOGLE_CLIENT_ID,
-    consumer_secret=GOOGLE_CLIENT_SECRET)
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
 
 
 def authorized_only(f):
@@ -48,37 +49,31 @@ def authorized_only(f):
   def wrapper(*args, **kwargs):
     access_token = flask.session.get('access_token')
     if access_token is None:
-      return flask.redirect(flask.url_for('login'))
+      callback = flask.url_for('authorized', _external=True)
+      return google.authorize(callback=callback)
     else:
       return f(*args, **kwargs)
 
   return wrapper
 
 
+@app.route(REDIRECT_URI)
+def authorized():
+  resp = google.authorized_response()
+  access_token = resp['access_token']
+  user = google.get('userinfo', token=(access_token, '')).data
+  if user['email'] in authorized_users:
+    flask.session['access_token'] = access_token, ''
+    flask.session['user'] = user
+    return flask.redirect(flask.url_for('index'))
+  else:
+    return 'Not authorized'
+
+
 @app.route('/')
 @authorized_only
 def index():
-  return 'This is a secret message.'
-
-
-@app.route('/login')
-def login():
-  callback = flask.url_for('authorized', _external=True)
-  return google.authorize(callback=callback)
-
-
-@app.route(REDIRECT_URI)
-@google.authorized_handler
-def authorized(resp):
-  access_token = resp['access_token']
-  user = google.get(url='userinfo', token=(token, '')).data
-  flask.session['access_token'] = access_token, ''
-  return flask.redirect(flask.url_for('index'))
-
-
-@google.tokengetter
-def get_access_token():
-  return flask.session.get('access_token')
+  return flask.jsonify(flask.session.get('user'))
 
 
 if __name__ == '__main__':
