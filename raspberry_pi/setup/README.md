@@ -73,6 +73,11 @@ Make sure you have:
     }
     ```
 
+    If connecting to a unsure WiFi, add the following in "network":
+    ```
+    key_mgmt=NONE
+    ```
+
 ## Boot
 
 1. Put micro SD card into Raspberry Pi.
