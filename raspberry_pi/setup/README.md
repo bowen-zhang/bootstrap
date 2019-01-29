@@ -80,6 +80,19 @@ For Raspberry Pi Zero W:
     key_mgmt=NONE
     ```
 
+1. Enable SSH over USB (Raspberry Pi Zero only)
+
+    Append the following to the bottom of /Volumes/boot/config.txt:
+
+    ```
+    dtoverlay=dwc2
+    ```
+
+    Append the following after "rootwait" in /Volumes/boot/cmdline.txt:
+    ```
+    modules-load=dwc2,g_ether
+    ```
+
 ## Boot
 
 1. Put micro SD card into Raspberry Pi.
@@ -174,6 +187,31 @@ For Raspberry Pi Zero W:
     Then, each time:
     ```shell
     ssh pi@[hostname].local
+    ```
+    And use password "raspberry".
+
+## Connect via USB cable (Raspberry Pi Zero only)
+
+1. Connect Raspberry Pi Zero and computer
+
+    Use a USB-A to micro USB cable to connect computer and Raspberry Pi Zero on
+    the data/peripherals port (not the charging port). No need to plug in
+    external power.
+
+2. Boot up Raspberry Pi Zero
+
+    Give plenty time for Raspberry Pi to boot up. 
+
+3. SSH to Raspberry Pi Zero
+
+    Before connecting to a new Raspberry Pi for the first time:
+    ```shell
+    ssh-keygen -R raspberrypi.local
+    ```
+
+    Then, each time:
+    ```shell
+    ssh pi@raspberrypi.local
     ```
     And use password "raspberry".
 
