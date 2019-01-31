@@ -11,10 +11,12 @@ Measures ambient temperature and barometric pressure.
 
 ## Wiring
 
-* VCC => 5V (such as pin #2)
-* GND => Ground (such as pin #6)
-* SCL => Serial Clock (pin #5)
-* SDA => Serial Data (pin #3)
+|BMP180 Sensor|Raspberry Pi|
+|---|---|
+|VCC|Pin #1 or #2: 3.3V or 5V|
+|GND|Pin #6: Ground|
+|SCL|Pin #5: GPIO 3/SCL|
+|SDA|Pin #3: GPIO 2/SDA|
 
 ## Install dependencies
 
