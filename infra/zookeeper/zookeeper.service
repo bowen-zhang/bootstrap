@@ -1,0 +1,14 @@
+[Unit]
+Description=Zookeeper Daemon
+Wants=syslog.target
+
+[Service]    
+Type=forking
+WorkingDirectory=/opt/zookeeper
+ExecStart=/opt/zookeeper/bin/zkServer.sh start
+ExecStop=/opt/zookeeper/bin/zkServer.sh stop
+TimeoutSec=30
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

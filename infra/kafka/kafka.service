@@ -1,0 +1,16 @@
+[Unit]
+Description=Kafka Daemon
+Wants=syslog.target
+After=zookeeper.service
+
+[Service]    
+Type=forking
+User=kafka
+WorkingDirectory=/opt/kafka
+ExecStart=/opt/kafka/bin/kafka-server-start.sh -daemon config/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh -daemon
+TimeoutSec=30
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
